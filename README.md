@@ -1,73 +1,100 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# **Web Authentication Module with NestJS**
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+The Web Authentication Module is a comprehensive solution for adding user authentication and authorization features to your NestJS application. This module is designed to streamline the process of integrating various authentication providers and securing your web endpoints.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## **Features**
 
-## Description
+  * User registration with email confirmation
+  * User login with customizable strategies (local, OAuth, etc.)
+  * JWT (JSON Web Token) based authentication
+  * Role-based authorization
+  * Password reset functionality
+  * Middleware for protecting routes
+  
+## **Installation**
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+  To integrate the Web Authentication Module into your NestJS application, follow these steps:
 
-## Installation
+  - [ ] Install the module package using npm:
+  ```npm install @nestjs/web-authentication```
+  - [ ] Import the WebAuthenticationModule into your main application module:
+ 
+   ```javascript #000000
+   import { Module } from '@nestjs/common';
+   import { WebAuthenticationModule } from '@nestjs/web-authentication';
 
-```bash
-$ npm install
+  @Module({
+  imports: [WebAuthenticationModule.forRoot({
+    // Configure options here
+  })],
+})
+export class AppModule {};
 ```
 
-## Running the app
 
-```bash
-# development
-$ npm run start
+- [ ] Configure the module options in the forRoot method.
 
-# watch mode
-$ npm run start:dev
+## **Configuration**
 
-# production mode
-$ npm run start:prod
+The module supports various configuration options to tailor authentication to your application's needs:
+
+  * secretKey: Your application's secret key for JWT encryption.
+  * jwtExpirationTime: Expiration time for JWT tokens (e.g., '1h', '7d', '30d').
+  * jwtIssuer: Issuer of the JWT tokens.
+  * userEntity: The User entity class.
+  * emailConfirmation: Enable/disable email confirmation during user registration.
+  * roles: An array of role names used in role-based authorization.
+  * emailSender: Configure the email sending service.
+  * resetPassword: Enable/disable password reset functionality.
+  
+## **Usage**
+
+**User Registration:** 
+
+Use the AuthService to register new users with email confirmation.
+
+```javascript
+const user = await authService.register({
+  email: 'user@example.com',
+  password: 'password',
+});
 ```
 
-## Test
+##### **User Login:** 
 
-```bash
-# unit tests
-$ npm run test
+Implement various login strategies with the AuthService.
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+```javascript
+  const token = await authService.login({
+  email: 'user@example.com',
+  password: 'password',
+});
 ```
 
-## Support
+##### **Protect Routes:**
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Use the AuthGuard to protect routes based on user authentication and roles.
+* @UseGuards(AuthGuard, RolesGuard)
+* @Roles('admin')
+* @Get('admin/dashboard')
+* async getAdminDashboard() {
+  // ...
+}
 
-## Stay in touch
+##### **Password Reset: Enable users to reset their passwords with the AuthService.**
+```await authService.requestPasswordReset('user@example.com');```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### Contribution
 
-## License
+Contributions to this module are welcome! If you encounter any issues, have feature requests, or want to contribute, please open an issue or submit a pull request on our GitHub repository.
+    
+## **License**
 
-Nest is [MIT licensed](LICENSE).
+This module is released under the MIT License.
+
+With the Web Authentication Module for NestJS, you can easily add secure authentication and authorization to your web application. Don't hesitate to refer to the documentation for more in-depth information and examples.
+
+
+
+
+
